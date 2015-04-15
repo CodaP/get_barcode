@@ -49,8 +49,11 @@ def main():
     counts = get_counts(args.sam_file, fp_len, fp_start)
 
     def id_sequence(seq):
-        seq = ''.join(reversed(map(lambda x: {'A':'T','T':'A','C':'G','G':'C','N':'N'}[x],seq)))
+        rev_comp_seq = ''.join(reversed(map(lambda x: {'A':'T','T':'A','C':'G','G':'C','N':'N'}[x],seq)))
         rows = barcodes.ix[barcodes.seq == seq]
+        if rows.size > 0:
+            return rows.id.iloc[0]
+        rows = barcodes.ix[barcodes.seq == rev_comp_seq]
         if rows.size > 0:
             return rows.id.iloc[0]
         return 'Unknown'
